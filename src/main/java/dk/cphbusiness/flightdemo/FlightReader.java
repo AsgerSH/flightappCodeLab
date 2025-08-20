@@ -1,6 +1,7 @@
 package dk.cphbusiness.flightdemo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dk.cphbusiness.flightdemo.dtos.AirlineDTO;
 import dk.cphbusiness.flightdemo.dtos.FlightDTO;
 import dk.cphbusiness.flightdemo.dtos.FlightInfoDTO;
 import dk.cphbusiness.utils.Utils;
@@ -10,6 +11,7 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Purpose:
@@ -22,7 +24,8 @@ public class FlightReader {
         try {
             List<FlightDTO> flightList = getFlightsFromFile("flights.json");
             List<FlightInfoDTO> flightInfoDTOList = getFlightInfoDetails(flightList);
-            flightInfoDTOList.forEach(System.out::println);
+            //flightInfoDTOList.forEach(System.out::println);
+            System.out.println("Avg: " + averageFlightTimeForAirline(flightInfoDTOList, "Lufthansa"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,5 +66,25 @@ public class FlightReader {
         .toList();
         return flightInfoList;
     }
+
+    // Opgave 1
+    public static List<FlightDTO> totalFlightForAirline(List<FlightDTO> flightList) {
+        return flightList.stream()
+                .filter(flight -> flight.getAirline() != null
+                        && flight.getAirline().getName() != null
+                        && flight.getAirline().getName().equalsIgnoreCase("Lufthansa"))
+                .collect(Collectors.toList());
+    }
+
+    // Opgave 2
+    public static double averageFlightTimeForAirline(List<FlightInfoDTO> flightInfoDTOList, String airline){
+        return flightInfoDTOList.stream()
+                .filter(f -> f.getAirline() != null)
+                .filter(f -> f.getAirline().equalsIgnoreCase(airline))
+                .mapToLong(f -> f.getDuration().toMinutes())
+                .average().orElse(0.0);
+    }
+
+    // Opgave 3
 
 }
