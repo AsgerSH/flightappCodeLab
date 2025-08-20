@@ -46,8 +46,14 @@ public class FlightReader {
 //            flightsBefore.forEach(System.out::println);
 
             // Alle flyture sorteret på arrival time
-            List<FlightInfoDTO> flightsSorted = listOfFlightsSortedByArrival(flightInfoDTOList);
-            flightsSorted.forEach(System.out::println);
+//            List<FlightInfoDTO> flightsSorted = listOfFlightsSortedByArrival(flightInfoDTOList);
+//            flightsSorted.forEach(System.out::println);
+
+            Map<String, Long> totalTimes = totalFlightTimePerAirline(flightInfoDTOList);
+            totalTimes.forEach((airline, minutes) ->
+                    System.out.println(airline + " total flight time: " + (minutes / 60) + "h " + (minutes % 60) + "m"));
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -136,5 +142,17 @@ public class FlightReader {
                 .sorted(Comparator.comparing(FlightInfoDTO::getArrival))
                 .collect(Collectors.toList());
     }
+
+    // Opgave 6 (AI Løst)
+    // Add a new feature (calculate the total flight time for each airline)
+    public static Map<String, Long> totalFlightTimePerAirline(List<FlightInfoDTO> flightInfoDTOList) {
+        return flightInfoDTOList.stream()
+                .filter(f -> f.getAirline() != null && f.getDuration() != null)
+                .collect(Collectors.groupingBy(
+                        FlightInfoDTO::getAirline,
+                        Collectors.summingLong(f -> f.getDuration().toMinutes())
+                ));
+    }
+
 
 }
