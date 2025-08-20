@@ -44,6 +44,10 @@ public class FlightReader {
             // Alle flyture før et givent tidspunkt på døgnet
 //            List<FlightInfoDTO> flightsBefore = listOfFlightsBeforeSpecificTime(flightInfoDTOList, LocalTime.of(1, 0));
 //            flightsBefore.forEach(System.out::println);
+
+            // Alle flyture sorteret på arrival time
+            List<FlightInfoDTO> flightsSorted = listOfFlightsSortedByArrival(flightInfoDTOList);
+            flightsSorted.forEach(System.out::println);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -125,5 +129,12 @@ public class FlightReader {
                 .collect(Collectors.toList());
     }
 
+    // Opgave 5
+    // Add a new feature (make a list of all flights sorted by arrival time)
+    public static List<FlightInfoDTO>listOfFlightsSortedByArrival(List<FlightInfoDTO> flightInfoDTOList){
+        return flightInfoDTOList.stream()
+                .sorted(Comparator.comparing(FlightInfoDTO::getArrival))
+                .collect(Collectors.toList());
+    }
 
 }
