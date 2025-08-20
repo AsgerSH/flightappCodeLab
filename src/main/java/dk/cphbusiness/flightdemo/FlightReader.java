@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -37,8 +38,12 @@ public class FlightReader {
 //            System.out.println(totalFlightForAirline(flightList));
 
             // Alle flyture mellem to lufthavne
-            List<FlightInfoDTO> flightsBetween = listOfFlightsBetweenAirports(flightInfoDTOList, "Fukuoka", "Haneda Airport");
-            flightsBetween.forEach(System.out::println);
+//            List<FlightInfoDTO> flightsBetween = listOfFlightsBetweenAirports(flightInfoDTOList, "Fukuoka", "Haneda Airport");
+//            flightsBetween.forEach(System.out::println);
+
+            // Alle flyture før et givent tidspunkt på døgnet
+//            List<FlightInfoDTO> flightsBefore = listOfFlightsBeforeSpecificTime(flightInfoDTOList, LocalTime.of(1, 0));
+//            flightsBefore.forEach(System.out::println);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,15 +86,6 @@ public class FlightReader {
     }
 
     // Opgave 1
-    public static List<FlightDTO> totalFlightForAirline(List<FlightDTO> flightList) {
-        return flightList.stream()
-                .filter(flight -> flight.getAirline() != null
-                        && flight.getAirline().getName() != null
-                        && flight.getAirline().getName().equalsIgnoreCase("Lufthansa"))
-                .collect(Collectors.toList());
-    }
-
-    // Opgave 2
     public static double averageFlightTimeForAirline(List<FlightInfoDTO> flightInfoDTOList, String airline) {
         return flightInfoDTOList.stream()
                 .filter(f -> f.getAirline() != null)
@@ -98,7 +94,7 @@ public class FlightReader {
                 .average().orElse(0.0);
     }
 
-    // Opgave 3 Add a new feature (make a list of flights that are operated between two specific airports.
+    // Opgave 2 Add a new feature (make a list of flights that are operated between two specific airports.
     // For example, all flights between Fukuoka and Haneda Airport)
 
     public static List<FlightInfoDTO> listOfFlightsBetweenAirports(List<FlightInfoDTO> flightInfoList, String airport1, String airport2) {
@@ -110,5 +106,24 @@ public class FlightReader {
                 )
                 .toList();
     }
+    // Opgave 3 Add a new feature
+    // (make a list of flights that leaves before a specific time in the day/night. For example, all flights that leave before 01:00)
+
+    public static List<FlightInfoDTO> listOfFlightsBeforeSpecificTime(List<FlightInfoDTO> flightInfoDTOList, LocalTime time){
+        return flightInfoDTOList.stream()
+                .filter(f -> f.getDeparture() != null)
+                .filter(f -> f.getDeparture().toLocalTime().isBefore(time))
+                .toList();
+    }
+
+    // Opgave 4
+    public static List<FlightDTO> totalFlightForAirline(List<FlightDTO> flightList) {
+        return flightList.stream()
+                .filter(flight -> flight.getAirline() != null
+                        && flight.getAirline().getName() != null
+                        && flight.getAirline().getName().equalsIgnoreCase("Lufthansa"))
+                .collect(Collectors.toList());
+    }
+
 
 }
