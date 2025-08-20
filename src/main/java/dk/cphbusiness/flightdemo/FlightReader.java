@@ -49,10 +49,14 @@ public class FlightReader {
 //            List<FlightInfoDTO> flightsSorted = listOfFlightsSortedByArrival(flightInfoDTOList);
 //            flightsSorted.forEach(System.out::println);
 
-            Map<String, Long> totalTimes = totalFlightTimePerAirline(flightInfoDTOList);
-            totalTimes.forEach((airline, minutes) ->
-                    System.out.println(airline + " total flight time: " + (minutes / 60) + "h " + (minutes % 60) + "m"));
+            // Totalsummen af alle airlines flytid
+//            Map<String, Long> totalTimes = totalFlightTimePerAirline(flightInfoDTOList);
+//            totalTimes.forEach((airline, minutes) ->
+//                    System.out.println(airline + " total flight time: " + (minutes / 60) + "h " + (minutes % 60) + "m"));
 
+            // Alle flyture sorteret på duration
+            List<FlightInfoDTO> flightsSorted = listOfAllFlightsSortedByDuration(flightInfoDTOList);
+            flightsSorted.forEach(System.out::println);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -119,7 +123,7 @@ public class FlightReader {
     // Opgave 3 Add a new feature
     // (make a list of flights that leaves before a specific time in the day/night. For example, all flights that leave before 01:00)
 
-    public static List<FlightInfoDTO> listOfFlightsBeforeSpecificTime(List<FlightInfoDTO> flightInfoDTOList, LocalTime time){
+    public static List<FlightInfoDTO> listOfFlightsBeforeSpecificTime(List<FlightInfoDTO> flightInfoDTOList, LocalTime time) {
         return flightInfoDTOList.stream()
                 .filter(f -> f.getDeparture() != null)
                 .filter(f -> f.getDeparture().toLocalTime().isBefore(time))
@@ -137,7 +141,7 @@ public class FlightReader {
 
     // Opgave 5
     // Add a new feature (make a list of all flights sorted by arrival time)
-    public static List<FlightInfoDTO>listOfFlightsSortedByArrival(List<FlightInfoDTO> flightInfoDTOList){
+    public static List<FlightInfoDTO> listOfFlightsSortedByArrival(List<FlightInfoDTO> flightInfoDTOList) {
         return flightInfoDTOList.stream()
                 .sorted(Comparator.comparing(FlightInfoDTO::getArrival))
                 .collect(Collectors.toList());
@@ -154,5 +158,11 @@ public class FlightReader {
                 ));
     }
 
-
+    // Opgave 7
+    // Add a new feature (make a list of all flights sorted by duration)
+    public static List<FlightInfoDTO> listOfAllFlightsSortedByDuration(List<FlightInfoDTO> flightInfoDTOList){
+        return flightInfoDTOList.stream()
+                .sorted(Comparator.comparing(FlightInfoDTO::getDuration))
+                .collect(Collectors.toList());
+    }
 }
